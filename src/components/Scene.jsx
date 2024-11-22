@@ -1,8 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { useGLTF } from '@react-three/drei';
 
+/**
+ * Renders a 3D box object with configurable properties.
+ */
 function Box({ position, scale, rotation, material }) {
   return (
     <mesh position={position} scale={scale} rotation={rotation}>
@@ -17,8 +19,11 @@ function Box({ position, scale, rotation, material }) {
   );
 }
 
+/**
+ * Renders a light object based on the specified type and properties.
+ */
 function Light({ type, position, intensity, color, decay, distance }) {
-  switch(type) {
+  switch (type) {
     case 'point':
       return (
         <pointLight 
@@ -44,6 +49,9 @@ function Light({ type, position, intensity, color, decay, distance }) {
   }
 }
 
+/**
+ * Renders a sensor object, represented as a small sphere.
+ */
 function Sensor({ type, position }) {
   return (
     <mesh position={position}>
@@ -57,10 +65,13 @@ function Sensor({ type, position }) {
   );
 }
 
+/**
+ * Renders the entire scene based on the provided scene data.
+ */
 export function Scene({ sceneData }) {
   const { camera } = useThree();
   
-  // Update camera when scene data changes
+  // Update the camera's properties when scene data changes.
   useEffect(() => {
     if (sceneData?.scene?.camera) {
       const { position, target, fov } = sceneData.scene.camera;
@@ -78,7 +89,7 @@ export function Scene({ sceneData }) {
         <Light key={light.id || index} {...light} />
       ))}
 
-      {/* Building */}
+      {/* Primary Model (e.g., Building) */}
       <Box 
         position={sceneData?.models?.[0]?.settings?.position || [0, 0, 0]}
         scale={sceneData?.models?.[0]?.settings?.scale || [1, 1, 1]}
@@ -91,7 +102,7 @@ export function Scene({ sceneData }) {
         <Sensor key={sensor.id || index} {...sensor} />
       ))}
 
-      {/* Grid Helper */}
+      {/* Grid Helper for Visual Reference */}
       <gridHelper args={[20, 20]} />
     </>
   );
